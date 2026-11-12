@@ -14,8 +14,16 @@ def totale_carrello(carrello):
     return totale
 
 
-def stampa_scontrino(carrello):
-    """Stampa ogni riga del carrello e il totale finale."""
+def applica_sconto(totale, percentuale):
+    """Applica al totale uno sconto espresso in percentuale (es. 10 = 10%)."""
+    if percentuale == 0:
+        return totale
+    sconto = totale * percentuale / 100
+    return round(totale - sconto, 1)
+
+
+def stampa_scontrino(carrello, sconto=0):
+    """Stampa ogni riga del carrello, l'eventuale sconto e il totale finale."""
     for prodotto in carrello:
         print(
             f"{prodotto['nome']:<12} "
@@ -23,7 +31,12 @@ def stampa_scontrino(carrello):
             f"= {subtotale(prodotto):>7.2f} €"
         )
     print("-" * 40)
-    print(f"{'TOTALE':<29}{totale_carrello(carrello):>7.2f} €")
+    totale = totale_carrello(carrello)
+    if sconto:
+        totale_scontato = applica_sconto(totale, sconto)
+        print(f"{'Subtotale':<29}{totale:>7.2f} €")
+        print(f"{'Sconto ' + str(sconto) + '%':<29}{totale_scontato - totale:>7.2f} €")
+    print(f"{'TOTALE':<29}{totale_scontato:>7.2f} €")
 
 
 if __name__ == "__main__":
@@ -33,4 +46,4 @@ if __name__ == "__main__":
         {"nome": "Mele", "prezzo": 0.40, "quantita": 6},
         {"nome": "Caffè", "prezzo": 4.90, "quantita": 1},
     ]
-    stampa_scontrino(carrello)
+    stampa_scontrino(carrello, sconto=10)
